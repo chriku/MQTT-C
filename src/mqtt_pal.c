@@ -253,7 +253,10 @@ ssize_t mqtt_pal_recvall(mqtt_pal_socket_handle fd, void* buf, size_t bufsz, int
     return (ssize_t)(bufptr - start);
 }
 
-#elif defined(__unix__) || defined(__APPLE__)
+#elif defined(__unix__) || defined(__APPLE__) || defined(ESP_PLATFORM)
+#if defined(ESP_PLATFORM)
+#include "lwip/sockets.h"
+#endif
 
 #include <errno.h>
 

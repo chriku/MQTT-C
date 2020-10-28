@@ -25,6 +25,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -115,6 +117,26 @@ extern "C" {
             typedef int mqtt_pal_socket_handle;
         #endif
     #endif
+#elif defined(ESP_PLATFORM)
+    #include <limits.h>
+    #include <string.h>
+    #include <stdarg.h>
+    #include <time.h>
+    #include <arpa/inet.h>
+
+    #define MQTT_PAL_HTONS(s) htons(s)
+    #define MQTT_PAL_NTOHS(s) ntohs(s)
+
+    #define MQTT_PAL_TIME() time(NULL)
+
+    typedef time_t mqtt_pal_time_t;
+    typedef pthread_mutex_t mqtt_pal_mutex_t;
+
+    #define MQTT_PAL_MUTEX_INIT(mtx_ptr) 
+    #define MQTT_PAL_MUTEX_LOCK(mtx_ptr) 
+    #define MQTT_PAL_MUTEX_UNLOCK(mtx_ptr) 
+
+    typedef int mqtt_pal_socket_handle;
 #elif defined(_MSC_VER)
     #include <limits.h>
     #include <winsock2.h>

@@ -40,6 +40,7 @@ enum MQTTErrors mqtt_sync(struct mqtt_client *client) {
     if (client->error != MQTT_ERROR_RECONNECTING && client->error != MQTT_OK && client->reconnect_callback != NULL) {
         client->reconnect_callback(client, &client->reconnect_state);
         /* unlocked during CONNECT */
+        return MQTT_OK;
     } else {
         /* mqtt_reconnect will have queued the disconnect packet - that needs to be sent and then call reconnect */
         if (client->error == MQTT_ERROR_RECONNECTING) {
@@ -69,6 +70,7 @@ enum MQTTErrors mqtt_sync(struct mqtt_client *client) {
     if (reconnecting && client->reconnect_callback != NULL) {
         MQTT_PAL_MUTEX_LOCK(&client->mutex);
         client->reconnect_callback(client, &client->reconnect_state);
+        return MQTT_OK;
     }
 
     return err;
